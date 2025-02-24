@@ -31,7 +31,7 @@ const rules = computed(() => ({
   },
   phone: {
     required,
-    requiredPhone: requiredPhone(18),
+    requiredPhone: requiredPhone(24),
   },
   textarea: {
     required,
@@ -107,6 +107,7 @@ const vMyMaska = {
         <input
           type="text"
           v-model="form.name"
+          @focus="v.$reset()"
           :class="{ 'is-danger': !!validate({ prop: 'name' }) }"
           class="input"
         />
@@ -121,6 +122,7 @@ const vMyMaska = {
         <input
           type="email"
           v-model="form.email"
+          @focus="v.$reset()"
           class="input"
           :class="{ 'is-danger': !!validate({ prop: 'email' }) }"
         />
@@ -129,13 +131,13 @@ const vMyMaska = {
         </p>
       </div>
     </div>
-    {{ form.phone }}
     <div class="field">
       <label class="label"> Phone Number </label>
       <div class="control">
         <input
           type="phone"
           v-model="form.phone"
+          @focus="v.$reset()"
           v-maska
           :data-maska="'+38 (###) - ### - ## - ##'"
           class="input"
@@ -152,6 +154,7 @@ const vMyMaska = {
         <textarea
           type="text"
           v-model="form.textarea"
+          @focus="v.$reset()"
           class="textarea"
           :class="{ 'is-danger': !!validate({ prop: 'textarea' }) }"
         />
@@ -166,6 +169,7 @@ const vMyMaska = {
         <input
           type="password"
           v-model="form.password"
+          @focus="v.$reset()"
           class="input"
           :class="{ 'is-danger': !!validate({ prop: 'password' }) }"
         />
@@ -180,6 +184,7 @@ const vMyMaska = {
         <input
           type="password"
           v-model="form.currentPassword"
+          @focus="v.$reset()"
           class="input"
           :class="{ 'is-danger': !!validate({ prop: 'currentPassword' }) }"
         />
@@ -191,7 +196,7 @@ const vMyMaska = {
     <div class="field">
       <div class="control">
         <label class="label" :class="{ 'has-text-danger': !!validate({ prop: 'checkbox' }) }">
-          <input type="checkbox" v-model="form.checkbox" class="checkbox" />
+          <input type="checkbox" v-model="form.checkbox" class="checkbox" @focus="v.$reset()" />
           I'm agree with the <a href="#">community rules</a>
         </label>
       </div>
