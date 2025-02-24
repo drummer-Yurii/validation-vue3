@@ -51,7 +51,7 @@ const rules = computed(() => ({
   checkbox: {
     required,
     sameAs: sameAs(true),
-  }
+  },
 }));
 
 const v = useVuelidate(rules, form);
@@ -62,14 +62,36 @@ const validate = ({ prop }) => {
 };
 
 const resetForm = () => {
-  Object.keys(form).forEach((key) => { 
+  Object.keys(form).forEach((key) => {
     form[key] = null;
   });
   v.value.$reset();
 };
 
-const onSubmit = () => {
-  console.log(123);
+const onSubmit = async () => {
+  v.value.$touch();
+  if (form.pending) return;
+  if (await v.value.$validate()) {
+    form.pending = true;
+    try {
+      const payload = {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        textarea: form.textarea,
+        password: form.password,
+        currentPassword: form.currentPassword,
+        checkbox: form.checkbox,
+      };
+      setTimeout(() => {
+        console.log(payload);
+        console.log('Send Request');
+        resetForm();
+      }, 2500);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 };
 
 const vMyMaska = {
@@ -82,13 +104,29 @@ const vMyMaska = {
     <div class="field">
       <label class="label"> Name </label>
       <div class="control">
-        <input type="text" v-model="form.name" class="input" />
+        <input
+          type="text"
+          v-model="form.name"
+          :class="{ 'is-danger': !!validate({ prop: 'name' }) }"
+          class="input"
+        />
+        <p v-if="!!validate({ prop: 'name' })" class="help is-danger">
+          {{ validate({ prop: 'name' }) }}
+        </p>
       </div>
     </div>
     <div class="field">
       <label class="label"> Email </label>
       <div class="control">
-        <input type="email" v-model="form.email" class="input" />
+        <input
+          type="email"
+          v-model="form.email"
+          class="input"
+          :class="{ 'is-danger': !!validate({ prop: 'email' }) }"
+        />
+        <p v-if="!!validate({ prop: 'email' })" class="help is-danger">
+          {{ validate({ prop: 'email' }) }}
+        </p>
       </div>
     </div>
     {{ form.phone }}
@@ -101,30 +139,58 @@ const vMyMaska = {
           v-maska
           :data-maska="'+38 (###) - ### - ## - ##'"
           class="input"
+          :class="{ 'is-danger': !!validate({ prop: 'phone' }) }"
         />
+        <p v-if="!!validate({ prop: 'phone' })" class="help is-danger">
+          {{ validate({ prop: 'phone' }) }}
+        </p>
       </div>
     </div>
     <div class="field">
       <label class="label"> Message </label>
       <div class="control">
-        <textarea type="text" v-model="form.textarea" class="textarea" />
+        <textarea
+          type="text"
+          v-model="form.textarea"
+          class="textarea"
+          :class="{ 'is-danger': !!validate({ prop: 'textarea' }) }"
+        />
+        <p v-if="!!validate({ prop: 'textarea' })" class="help is-danger">
+          {{ validate({ prop: 'textarea' }) }}
+        </p>
       </div>
     </div>
     <div class="field">
       <label class="label"> Password </label>
       <div class="control">
-        <input type="password" v-model="form.password" class="input" />
+        <input
+          type="password"
+          v-model="form.password"
+          class="input"
+          :class="{ 'is-danger': !!validate({ prop: 'password' }) }"
+        />
+        <p v-if="!!validate({ prop: 'password' })" class="help is-danger">
+          {{ validate({ prop: 'password' }) }}
+        </p>
       </div>
     </div>
     <div class="field">
       <label class="label"> Current Password </label>
       <div class="control">
-        <input type="password" v-model="form.currentPassword" class="input" />
+        <input
+          type="password"
+          v-model="form.currentPassword"
+          class="input"
+          :class="{ 'is-danger': !!validate({ prop: 'currentPassword' }) }"
+        />
+        <p v-if="!!validate({ prop: 'currentPassword' })" class="help is-danger">
+          {{ validate({ prop: 'currentPassword' }) }}
+        </p>
       </div>
     </div>
     <div class="field">
       <div class="control">
-        <label class="label">
+        <label class="label" :class="{ 'has-text-danger': !!validate({ prop: 'checkbox' }) }">
           <input type="checkbox" v-model="form.checkbox" class="checkbox" />
           I'm agree with the <a href="#">community rules</a>
         </label>
